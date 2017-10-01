@@ -1,0 +1,29 @@
+- Adapt the folders for moodledata and mysql to your setup
+That will allow yo to install once and do all your tests
+
+[homeDirectory]/docker/moodledata
+[homeDirectory]/docker/moodle-mysql/mysql
+- Start the testing stack:
+docker-compose up -d
+docker ps
+docker exec -it desktop_webserver_1 bash
+
+- Install moodle and adjust settings, in the container shell, type
+chown www-data:www-data /var/www/moodledata
+sed -i -e "s#\$CFG->sslproxy = true;##" config.php
+php admin/cli/install_database.php --adminpass=secret --agree-license
+
+- Login into moodle at http://localhost:8180 (or the port of your choice, setted in the compose file)
+- Create a course and set an SCORM activity.
+- Test it
+
+- Stop compose and change the web server version
+docker-compose down
+
+- Modifiy the docker-compose file to use the other webserver
+Be sure to add a new activity or delete the browser caches !
+
+- Restart and delete the unnecesary config:
+docker-compose up -d
+docker exec -it desktop_webserver_1 bash
+sed -i -e "s#\$CFG->sslproxy = true;##" config.php

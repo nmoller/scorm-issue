@@ -1,0 +1,33 @@
+webserver:
+  #image: nmolleruq/uqammdl:v1.224SamlNoCSS  # based on php5.6.31-apache
+  image: nmolleruq/uqammdl:v1.223SamlNoCSS # based on php7.0.21-apache
+  volumes:
+    - /home/nmoller/docker/moodledata:/var/www/moodledata
+  environment:
+    MDL_DBTYPE: mysqli
+    MDL_DBHOST: mysqlserver
+    MDL_DBNAME: moodle
+    MDL_DBUSER: root
+    MDL_DBPASS: root
+    MDL_WWWROOT: 'http://localhost:8180'
+    MDL_MEMSESSION: memsession
+    MDL_DATAROOT: '/var/www/moodledata'
+    MDL_LOCALCACHEDIR: '/tmp'
+
+  links:
+    - mysqlserver
+    - memsession
+
+  ports:
+    - "8180:80"
+
+mysqlserver:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: moodle
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /home/nmoller/docker/moodle-mysql/mysql:/var/lib/mysql
+
+memsession:
+  image: memcached
