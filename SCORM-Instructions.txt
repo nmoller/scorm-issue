@@ -14,7 +14,7 @@ sed -i -e "s#\$CFG->sslproxy = true;##" config.php
 php admin/cli/install_database.php --adminpass=secret --agree-license
 
 - Login into moodle at http://localhost:8180 (or the port of your choice, setted in the compose file)
-- Create a course and set an SCORM activity.
+- Create a course and set an SCORM activity (use the package that is given here in the zip file).
 - Test it
 
 - Stop compose and change the web server version
