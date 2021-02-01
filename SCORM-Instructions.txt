@@ -11,7 +11,7 @@ docker exec -it desktop_webserver_1 bash
 - Install moodle and adjust settings, in the container shell, type
 chown www-data:www-data /var/www/moodledata
 sed -i -e "s#\$CFG->sslproxy = true;##" config.php
-php admin/cli/install_database.php --adminpass=secret --agree-license
+php admin/cli/install_database.php --adminpass=secret --agree-license --adminemail='admin-moodle@uqam.ca'
 
 - Login into moodle at http://localhost:8180 (or the port of your choice, setted in the compose file)
 - Create a course and set an SCORM activity (use the package that is given here in the zip file).
@@ -27,3 +27,12 @@ Be sure to add a new activity or delete the browser caches !
 docker-compose up -d
 docker exec -it desktop_webserver_1 bash
 sed -i -e "s#\$CFG->sslproxy = true;##" config.php
+
+## Auth saml
+Configurer /etc/hosts pour utiliser simplesamlphp:
+127.0.0.1       simplesamlphp
+0.0.0.0         simplesamlphp
+
+Pour configurer auth_saml2
+http://simplesamlphp:8080/simplesaml/saml2/idp/metadata.php
+Pour travailler sur http, changer config cookie

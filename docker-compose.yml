@@ -1,6 +1,9 @@
+# https://github.com/nmoller/scorm-issue
+# https://hub.docker.com/r/kristophjunge/test-saml-idp/
 webserver:
   #image: nmolleruq/uqammdl:v1.224SamlNoCSS  # based on php5.6.31-apache
-  image: nmolleruq/uqammdl:v1.223SamlNoCSS # based on php7.0.21-apache
+  #image: nmolleruq/uqammdl:v1.223SamlNoCSS # based on php7.0.21-apache
+  image: nmolleruq/moouqamtest:2.0.80
   volumes:
     - /home/nmoller/docker/moodledata:/var/www/moodledata
   environment:
@@ -17,6 +20,7 @@ webserver:
   links:
     - mysqlserver
     - memsession
+    - simplesamlphp
 
   ports:
     - "8180:80"
@@ -26,8 +30,20 @@ mysqlserver:
     environment:
       MYSQL_DATABASE: moodle
       MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - /home/nmoller/docker/moodle-mysql/mysql:/var/lib/mysql
+    #volumes:
+    #  - /home/nmoller/docker/moodle-mysql/mysql:/var/lib/mysql
 
 memsession:
   image: memcached
+
+simplesamlphp:
+  image: kristophjunge/test-saml-idp:1.15
+  environment:
+    SIMPLESAMLPHP_SP_ENTITY_ID: 'http://localhost:8180/auth/saml2/sp/metadata.php'
+    SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: 'http://localhost:8180/auth/saml2/sp/saml2-acs.php/localhost'
+    SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: 'http://localhost:8180/auth/saml2/sp/saml2-logout.php/localhost'
+  volumes:
+    - ./users.php:/var/www/simplesamlphp/config/authsources.php
+  ports:
+    - "8080:8080"
+    - "8443:8443"
