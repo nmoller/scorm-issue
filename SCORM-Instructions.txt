@@ -29,7 +29,12 @@ docker exec -it desktop_webserver_1 bash
 sed -i -e "s#\$CFG->sslproxy = true;##" config.php
 
 ## Auth saml
-Configurer /etc/hosts pour utiliser simplesamlphp:
+Pour valider si l'entrée existe:
+```
+getent ahosts simplesamlphp|grep STREAM
+```
+Si pas d'affichage; configurer /etc/hosts pour utiliser simplesamlphp:
+
 127.0.0.1       simplesamlphp
 0.0.0.0         simplesamlphp
 
